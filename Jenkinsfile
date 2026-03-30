@@ -2,8 +2,6 @@ pipeline {
     agent any
     environment {
         OPENAI_API_KEY = credentials('OPENAI_API_KEY')
-    }
-    environment {
         DOCKER_IMAGE = "ai-service"
         CONTAINER_NAME = "ai-logic-prod"
         HOST_PORT = "8002"
