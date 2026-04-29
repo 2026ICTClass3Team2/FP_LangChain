@@ -1,16 +1,24 @@
 from fastapi import APIRouter
 from app.services.chatbot_service import ChatbotService
-from typing import List
+from typing import List, Optional
+from pydantic import BaseModel
+
+class ReviewRequest(BaseModel):
+    code: str
+
+class ChatRequest(BaseModel):
+    message: str
+    history: Optional[List[str]] = []
 
 router = APIRouter()
 chatbot_svc = ChatbotService()
 
 @router.post("/chatbot/review")
-def review_code(code: str):
-    review = chatbot_svc.review_code(code)
+def review_code(req: ReviewRequest):
+    review = chatbot_svc.review_code(req.code)
     return {"review": review}
 
 @router.post("/chatbot/chat")
-def chat(message: str, history: List[str] = []):
-    response = chatbot_svc.chat(message, history)
-    return {"response": response}
+def chat(req: ChatRequest):
+    response = chatbot_svc.chat(req.message, req.history)
+    return {"response": response}
