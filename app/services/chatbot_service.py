@@ -40,7 +40,7 @@ Use the following Clean Code Standards as your primary reference:
 {self.clean_code_rules}
 ---
 
-Provide a cleaner and more efficient version of the code, and explain your reasoning.
+Provide a cleaner and more efficient version of the code, and explain your reasoning. Please reply in Korean.
 
 Code to review:
 {code}
