@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Docker Build') {
             steps {
-                sh "DOCKER_BUILDKIT=1 docker build -t ${DOCKER_IMAGE}:latest ."
+                sh "docker build -t ${DOCKER_IMAGE}:latest ."
             }
         }
         stage('Deploy') {
