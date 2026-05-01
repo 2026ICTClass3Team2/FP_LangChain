@@ -10,14 +10,22 @@ class ChatbotService:
             google_api_key=config.gemini_api_key
         )
         
-        # Load clean code standards
-        self.standards_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'clean_code_standards.md')
+        # Load clean code standards from PDF
+        # We use pypdf to read the PDF file and extract text from each page
+        self.standards_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'data', 'Clean_Code.pdf')
         self.clean_code_rules = ""
         try:
-            with open(self.standards_path, 'r', encoding='utf-8') as f:
-                self.clean_code_rules = f.read()
+            import pypdf
+            # Open the PDF file in binary read mode
+            with open(self.standards_path, 'rb') as f:
+                reader = pypdf.PdfReader(f)
+                # Iterate through all pages and concatenate the extracted text
+                for page in reader.pages:
+                    text = page.extract_text()
+                    if text:
+                        self.clean_code_rules += text + "\n"
         except Exception as e:
-            print(f"Warning: Could not load clean code standards. {e}")
+            print(f"Warning: Could not load clean code standards from PDF. {e}")
 
 
     def _response_text(self, response) -> str:
@@ -32,7 +40,7 @@ Use the following Clean Code Standards as your primary reference:
 {self.clean_code_rules}
 ---
 
-Provide a cleaner and more efficient version of the code, and explain your reasoning.
+Provide a cleaner and more efficient version of the code, and explain your reasoning. Please reply in Korean.
 
 Code to review:
 {code}
