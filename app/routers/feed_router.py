@@ -12,7 +12,7 @@ rec_svc = RecommendationService()
 feeds: List[Feed] = []
 users: List[User] = []
 
-@router.post("/feed/summarize")
+@router.post("/api/feed/summarize")
 def summarize_feed(link: str, author_id: str):
     result = summary_svc.summarize_feed(link)
     feed = Feed(
@@ -26,14 +26,14 @@ def summarize_feed(link: str, author_id: str):
     feeds.append(feed)
     return feed
 
-@router.get("/feed/recommend/{user_id}")
+@router.get("/api/feed/recommend/{user_id}")
 def recommend_feeds(user_id: str):
     user = next((u for u in users if u.id == user_id), None)
     if not user:
         return []
     return rec_svc.recommend_feeds(user.interests, feeds)
 
-@router.post("/user")
+@router.post("/api/user")
 def create_user(user: User):
     users.append(user)
     return user
