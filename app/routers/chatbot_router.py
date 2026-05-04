@@ -13,12 +13,12 @@ class ChatRequest(BaseModel):
 router = APIRouter()
 chatbot_svc = ChatbotService()
 
-@router.post("/chatbot/review")
+@router.post("/api/chatbot/review")
 def review_code(req: ReviewRequest):
     review = chatbot_svc.review_code(req.code)
     return {"review": review}
 
-@router.post("/chatbot/chat")
+@router.post("/api/chatbot/chat")
 def chat(req: ChatRequest):
     response = chatbot_svc.chat(req.message, req.history)
-    return {"response": response}
+    return {"response": response}
