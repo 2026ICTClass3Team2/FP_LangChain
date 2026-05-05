@@ -26,3 +26,7 @@ app.include_router(tag_router, prefix="/api", tags=["tag"])
 @app.get("/")
 def root():
     return {"message": "Welcome to FP LangChain Web Service"}
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}

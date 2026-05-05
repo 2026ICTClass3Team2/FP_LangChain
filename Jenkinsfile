@@ -24,7 +24,7 @@ pipeline {
                     sh """
                     docker run -d \
                         --name ${CONTAINER_NAME} \
-                        -p ${HOST_PORT}:8000 \
+                        -p ${HOST_PORT}:8001 \
                         -e GEMINI_API_KEY=${GEMINI_API_KEY} \
                         ${DOCKER_IMAGE}:latest
                     """
