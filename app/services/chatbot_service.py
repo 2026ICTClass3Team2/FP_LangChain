@@ -1,10 +1,10 @@
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.tools import tool
-from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 from typing import List
 from app.core.config import config
 
@@ -112,11 +112,11 @@ class ChatbotService:
         except Exception as e:
             print(f"Warning: Could not load clean code standards. {e}")
 
-        # ReAct agent for FAQ chat (langgraph.prebuilt)
-        self._chat_agent = create_react_agent(
+        # Tool-calling agent for FAQ chat (langchain.agents.create_agent)
+        self._chat_agent = create_agent(
             model=self.llm,
             tools=[search_deadbug_faq],
-            prompt=SystemMessage(content=_AGENT_SYSTEM),
+            system_prompt=_AGENT_SYSTEM,
         )
 
         # LCEL chain for code review (single-shot, no tool loop needed)
