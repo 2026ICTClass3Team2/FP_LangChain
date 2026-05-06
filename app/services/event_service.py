@@ -62,6 +62,37 @@ class EventQnaService:
             google_api_key=config.gemini_api_key,
         )
 
+    def verify_answer(self, question_title: str, question_body: str, comment_body: str) -> bool:
+        """Returns True if the comment genuinely answers the question."""
+        prompt = f"""당신은 개발자 Q&A 플랫폼의 채점자입니다.
+아래 질문에 대해 제출된 답변이 실제로 질문에 대한 유효한 답변인지 판단하세요.
+
+[질문 제목]
+{question_title}
+
+[질문 내용]
+{question_body}
+
+[제출된 답변]
+{comment_body}
+
+판단 기준:
+- 답변이 질문의 핵심 내용을 다루고 있는가
+- 기술적으로 올바른 정보를 포함하고 있는가
+- 단순한 인사말, 질문 재반복, 관련 없는 내용이 아닌가
+- 최소한의 설명 또는 코드가 포함되어 있는가
+
+"yes" 또는 "no" 중 하나만 답하세요. 다른 텍스트는 포함하지 마세요."""
+
+        try:
+            response = self.llm.invoke([HumanMessage(content=prompt)])
+            answer = response.content.strip().lower()
+            logger.info("[이벤트 QnA 검증] 응답='%s'", answer)
+            return answer.startswith("yes")
+        except Exception as e:
+            logger.warning("[이벤트 QnA 검증] LLM 호출 실패: %s", e)
+            return False
+
     def generate_event_questions(self) -> list[dict]:
         today = datetime.now().strftime("%Y년 %m월 %d일")
         topics = random.sample(_TOPICS, 3)
